@@ -1,7 +1,7 @@
 {
-  "name": "kduma/eloquent-uuidable",
-  "description": "Eases using and generating uuid's in Laravel Eloquent models.",
-  "keywords": ["laravel", "eloquent", "uuid", "guid"],
+  "name": "kduma/eloquent-ulidable",
+  "description": "Eases using and generating ulid's in Laravel Eloquent models.",
+  "keywords": ["laravel", "eloquent", "ulid"],
   "license": "MIT",
   "authors": [
     {
@@ -10,8 +10,7 @@
     }
   ],
   "require": {
-    "php": ">=7.4",
-    "ramsey/uuid": "^3.8|^3.9|^4.0"
+    "php": ">=8.1"
   },
   "autoload": {
     "psr-4": {
