@@ -6,6 +6,8 @@
 
 Eases using and generating ulid's in Laravel Eloquent models.
 
+Check full documentation here: [opensource.duma.sh/libraries/php/eloquent-ulidable](https://opensource.duma.sh/libraries/php/eloquent-ulidable)
+
 # Setup
 Install it using composer
 
