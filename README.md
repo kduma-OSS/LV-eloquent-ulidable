@@ -1,32 +1,84 @@
-# L5-eloquent-ulidable
-[![Latest Stable Version](https://poser.pugx.org/kduma/eloquent-ulidable/v/stable.svg)](https://packagist.org/packages/kduma/eloquent-ulidable) 
-[![Total Downloads](https://poser.pugx.org/kduma/eloquent-ulidable/downloads.svg)](https://packagist.org/packages/kduma/eloquent-ulidable) 
-[![Latest Unstable Version](https://poser.pugx.org/kduma/eloquent-ulidable/v/unstable.svg)](https://packagist.org/packages/kduma/eloquent-ulidable) 
+# Eloquent ULID-able
+
+[![Latest Stable Version](https://poser.pugx.org/kduma/eloquent-ulidable/v/stable.svg)](https://packagist.org/packages/kduma/eloquent-ulidable)
+[![Total Downloads](https://poser.pugx.org/kduma/eloquent-ulidable/downloads.svg)](https://packagist.org/packages/kduma/eloquent-ulidable)
 [![License](https://poser.pugx.org/kduma/eloquent-ulidable/license.svg)](https://packagist.org/packages/kduma/eloquent-ulidable)
 
-Eases using and generating ulid's in Laravel Eloquent models.
+Eases using and generating ULIDs in Laravel Eloquent models as an additional column alongside the numeric `id`.
 
 Check full documentation here: [opensource.duma.sh/libraries/php/eloquent-ulidable](https://opensource.duma.sh/libraries/php/eloquent-ulidable)
 
-# Setup
-Install it using composer
+## Requirements
 
-    composer require kduma/eloquent-ulidable
+- PHP `^8.3`
+- Laravel `^13.0`
 
-# Prepare models
-Inside your model (not on top of file) add following lines:
-    
-    use \KDuma\Eloquent\Ulidable;
+## Installation
 
-In database create `ulid` string field. If you use migrations, you can use following snippet:
+```bash
+composer require kduma/eloquent-ulidable
+```
 
-    $table->ulid()->unique();
+## Setup
 
-# Usage
-By default, it generates slug on first save.
+Add the `Ulidable` trait to your model:
 
-- `$model->regenerateUlid()` - Generate new ulid. (Remember to save it by yourself)
-- `Model::whereUlid($ulid)->first()` - Find by ulid. (`whereUlid` is query scope)
+```php
+use KDuma\Eloquent\Ulidable;
 
-# Packagist
-View this package on Packagist.org: [kduma/eloquent-ulidable](https://packagist.org/packages/kduma/eloquent-ulidable)
+class Post extends Model
+{
+    use Ulidable;
+}
+```
+
+In your migration, create a `ulid` column:
+
+```php
+$table->ulid()->unique();
+```
+
+## Configuration
+
+### New style — PHP Attribute (recommended)
+
+```php
+use KDuma\Eloquent\Ulidable;
+use KDuma\Eloquent\Attributes\HasUlid;
+
+#[HasUlid(field: 'public_id', checkDuplicates: true)]
+class Post extends Model
+{
+    use Ulidable;
+}
+```
+
+Available `HasUlid` parameters:
+- `field` — column name to store the ULID (default: `'ulid'`)
+- `checkDuplicates` — query DB to ensure uniqueness before saving (default: `false`)
+
+### Old style — model properties (deprecated, triggers `E_USER_DEPRECATED`)
+
+```php
+class Post extends Model
+{
+    use Ulidable;
+
+    protected string $ulid_field = 'public_id';         // ⚠️ deprecated
+    protected bool $check_for_ulid_duplicates = true;    // ⚠️ deprecated
+}
+```
+
+## Usage
+
+- ULID is automatically generated on `create` and `update` if the field is `null`
+- `$model->regenerateUlid()` — manually regenerate (save afterwards)
+- `Model::whereUlid($ulid)` — query scope to find by ULID
+- `Model::byUlid($ulid)` — shorthand to retrieve a model by ULID
+- `$model->getUlidField()` — returns the configured ULID field name
+
+> **Note:** This package adds ULID as an *additional column* alongside the numeric auto-increment `id`. This is different from Laravel's built-in `HasUlids` trait which replaces the primary key.
+
+## Packagist
+
+[kduma/eloquent-ulidable](https://packagist.org/packages/kduma/eloquent-ulidable)
