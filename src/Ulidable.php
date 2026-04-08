@@ -23,7 +23,7 @@ trait Ulidable
         });
     }
 
-    public static function byUlid(string $ulid): static
+    public static function byUlid(string $ulid): ?static
     {
         return static::whereUlid($ulid)->first();
     }
